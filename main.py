@@ -10,8 +10,7 @@ warnings.filterwarnings("ignore")
 
 
 app = FastAPI()
-file_path = os.path.join("PI_ML_OPS-Steam", "data", "horas_juego.parquet")
-df_horas_juego = pd.read_parquet(file_path)
+#df_horas_juego = pd.read_parquet("data\horas_juego.parquet")
 #df_reviews_year = pd.read_parquet("PI_ML_OPS-Steam\data\df_reviews_year.parquet")
 #http://127.0.0.1:8000 
 
@@ -24,6 +23,8 @@ def index():
 
 @app.get("/PlayTimeGenre/{genero}")
 def PlayTimeGenre(genero):
+    
+    df_horas_juego = pd.read_parquet("data\horas_juego.parquet")
     gener = df_horas_juego[df_horas_juego["genres"].str.lower() ==genero.lower()]
     if not gener.empty:
         horas_anio = gener.groupby("release_year")["playtime_forever"].sum().reset_index()
