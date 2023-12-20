@@ -24,13 +24,17 @@ def index():
 @app.get("/PlayTimeGenre/{genero}")
 def PlayTimeGenre(genero:str):
     
-    df_horas_juego = pd.read_parquet("data\horas_juego.parquet")
+    df_horas_juego = pd.read_parquet("data/horas_juego.parquet")
+
     gener = df_horas_juego[df_horas_juego["genres"].str.lower() ==genero.lower()]
     if not gener.empty:
         horas_anio = gener.groupby("release_year")["playtime_forever"].sum().reset_index()
         max_horas  = horas_anio["playtime_forever"].max()
         anio = horas_anio.loc[horas_anio["playtime_forever"] == max_horas,"release_year"].iloc[0]
-        return  {anio,"Año de lanzamiento con mas horas jugadas para el Genero:" }
+        
+        return  {
+            anio,"Año de lanzamiento con mas horas jugadas para el Genero: {}".format(genero) 
+            }
     
 '''
 @app.get("/UsersNotRecommend/{anio}")
