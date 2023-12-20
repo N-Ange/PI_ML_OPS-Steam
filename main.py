@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore")
 
 app = FastAPI()
 df_horas_juego = pd.read_parquet("PI_ML_OPS-Steam\data\horas_juego.parquet")
-df_reviews_year = pd.read_parquet("PI_ML_OPS-Steam\data\df_reviews_year.parquet")
+#df_reviews_year = pd.read_parquet("PI_ML_OPS-Steam\data\df_reviews_year.parquet")
 #http://127.0.0.1:8000 
 
 @app.get("/")
@@ -29,7 +29,7 @@ def PlayTimeGenre(genero):
         anio = horas_anio.loc[horas_anio["playtime_forever"] == max_horas,"release_year"].iloc[0]
         return  {anio,"Año de lanzamiento con mas horas jugadas para el Genero:" }
     
-
+'''
 @app.get("/UsersNotRecommend/{anio}")
 def UsersNotRecommend(anio):
     filtro = (df_reviews_year["reviews_posted"] == anio) & (df_reviews_year["reviews_recommend"] == False) & (df_reviews_year["sentiment_analysis"] == 0)
@@ -47,7 +47,7 @@ def UsersNotRecommend(anio):
 
       
    
-    
+  '''  
 '''
 top_por_anio = {} 
 for index, row in resultado.iterrows():
