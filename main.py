@@ -22,7 +22,7 @@ def index():
 
 
 @app.get("/PlayTimeGenre/{genero}")
-def PlayTimeGenre(genero):
+def PlayTimeGenre(genero:str):
     
     df_horas_juego = pd.read_parquet("data\horas_juego.parquet")
     gener = df_horas_juego[df_horas_juego["genres"].str.lower() ==genero.lower()]
