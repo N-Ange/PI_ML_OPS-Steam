@@ -5,11 +5,13 @@ import pyarrow.parquet as pq
 import re
 import functions
 import warnings
+import os
 warnings.filterwarnings("ignore")
 
 
 app = FastAPI()
-df_horas_juego = pd.read_parquet("data\\horas_juego.parquet")
+file_path = os.path.join("PI_ML_OPS-Steam", "data", "horas_juego.parquet")
+df_horas_juego = pd.read_parquet(file_path)
 #df_reviews_year = pd.read_parquet("PI_ML_OPS-Steam\data\df_reviews_year.parquet")
 #http://127.0.0.1:8000 
 
