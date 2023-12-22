@@ -10,9 +10,9 @@ warnings.filterwarnings("ignore")
 
 
 app = FastAPI()
-#df_horas_juego = pd.read_parquet("data\horas_juego.parquet")
-df_reviews_year = pd.read_parquet("\data\df_reviews_year.parquet")
-#http://127.0.0.1:8000 
+
+#df_reviews_year = pd.read_parquet("\data\df_reviews_year.parquet")
+ 
 
 @app.get("/")
 def index():
