@@ -11,7 +11,7 @@ warnings.filterwarnings("ignore")
 
 app = FastAPI()
 #df_horas_juego = pd.read_parquet("data\horas_juego.parquet")
-df_reviews_year = pd.read_parquet("PI_ML_OPS-Steam\data\df_reviews_year.parquet")
+df_reviews_year = pd.read_parquet("\data\df_reviews_year.parquet")
 #http://127.0.0.1:8000 
 
 @app.get("/")
@@ -79,7 +79,7 @@ def UsersNotRecommend(anio):
         "item_id": row["item_id"],
         }
     resultado = games.head(3)
-    
+
 @app.get("/UsersNotRecommend2/{anio}")
 def UsersNotRecommend2(anio):
     year = []
