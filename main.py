@@ -24,7 +24,7 @@ def index():
 @app.get("/PlayTimeGenre/{genero}")
 def PlayTimeGenre(genero:str):
     
-    df_horas_juego = pd.read_parquet("data/horas_juego.parquet")
+    df_horas_juego = pd.read_parquet("PI_ML_OPS-Steam\data\horas_juego.parquet")
 
     gener = df_horas_juego[df_horas_juego["genres"].str.lower() ==genero.lower()]
     if not gener.empty:
@@ -38,7 +38,7 @@ def PlayTimeGenre(genero:str):
     
 @app.get("/UserForGenre{genero}")
 def UserForGenre(genero:str):
-    df_horas_juego = pd.read_parquet("data/horas_juego.parquet")
+    df_horas_juego = pd.read_parquet("PI_ML_OPS-Steam\data\horas_juego.parquet")
     # Filtrar las horas de juego para el género especificado
     horas = df_horas_juego[df_horas_juego['genres'] == genero][["playtime_forever", "release_year", "user_id"]]
 
@@ -79,6 +79,7 @@ def UsersNotRecommend(anio):
         "item_id": row["item_id"],
         }
     resultado = games.head(3)
+    
 @app.get("/UsersNotRecommend2/{anio}")
 def UsersNotRecommend2(anio):
     year = []
