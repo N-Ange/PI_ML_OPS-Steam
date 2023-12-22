@@ -67,6 +67,8 @@ def UserForGenre(genero:str):
 
 @app.get("/UsersNotRecommend/{anio}")
 def UsersNotRecommend(anio):
+    c
+    df_reviews_year = pd.read_parquet("data\df_reviews_year.parquet")
     filtro = (df_reviews_year["reviews_posted"] == anio) & (df_reviews_year["reviews_recommend"] == False) & (df_reviews_year["sentiment_analysis"] == 0)
     reviews = df_reviews_year[filtro]
 
