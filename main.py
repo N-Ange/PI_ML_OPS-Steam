@@ -88,7 +88,7 @@ def UsersNotRecommend2(anio):
     filtro = (df_reviews_year["reviews_posted"] == anio) & (df_reviews_year["reviews_recommend"] == False) & (df_reviews_year["sentiment_analysis"] == 0  )
     reviews = df_reviews_year[filtro] 
 
-    games = reviews.groupby(df_reviews_year["item_id"]).size().reset_index(name="count")
+    games = reviews.groupby(df_reviews_year["title"]).size().reset_index(name="count")
     games = games.sort_values(by = "count",ascending = False)
     return games.head(3)
    
