@@ -193,8 +193,8 @@ def sentiment_analysis(anio):
                 neutral +=1
             elif i == 0:
                 negative +=1
-        resultado = [
-        {"Negativas: ",negative," Positivas: ",positive," Neutrales: ",neutral}]
+        resultado = {"Negativas": negative, "Positivas": positive, "Neutrales": neutral}
+        return resultado
         return resultado
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
