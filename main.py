@@ -117,8 +117,8 @@ def UserForGenre(genero:str):
 def UsersRecommend(anio):
     try:
         filtro = (df_data_muestra.query(f"reviews_year == {anio}")  & 
-                  (df_data_muestra["reviews_recommend"] == True) & 
-                  (df_data_muestra["sentiment_analysis"] >= 1))
+                  (df_data_muestra[df_data_muestra["reviews_recommend"] == True]) & 
+                  (df_data_muestra[df_data_muestra["sentiment_analysis"] >= 1]))
         reviews = df_data_muestra[filtro]
 
         games = (reviews.groupby('item_name')['item_name']
@@ -128,7 +128,7 @@ def UsersRecommend(anio):
                  .head(3))
 
        
-        top_por_anio =[{"Puesto": i+1, "item_name":juego }for i,juego in enumerate(games["item_name"])]
+        top_por_anio ={f"Puesto {i+1}":juego for i,juego in enumerate(games["item_name"])}
         
         return top_por_anio
     except Exception as e:
