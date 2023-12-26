@@ -163,3 +163,25 @@ def sentimientos(review):
         return 2
     else:
         return 1
+    
+
+def porcentaje(df, columna):
+    count = df[columna].value_counts()
+    porcentajes = round(100*count/len(df),2)
+    resultado =pd.DataFrame({
+        "cantidad":count,
+        "Porcentaje":porcentajes
+    })
+    return resultado
+
+
+def whisker_max(columna):
+    
+    q1= columna.describe()[4]
+    q3= columna.describe()[6]
+    whisker_max = round(q3 + 1.5*(q3 - q1),2)
+    print (f"El bigote superir de la variable {columna.name} se ubica en:", whisker_max)
+    print(f"Hay {(columna > whisker_max).sum()} valores atipocs en la variable {columna.name}")
+    
+
+
