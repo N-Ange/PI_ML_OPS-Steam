@@ -12,14 +12,36 @@ warnings.filterwarnings("ignore")
 
 
 app = FastAPI()
-ruta_reviews_year = 'data/df_reviews_year.parquet'
+'''ruta_reviews_year = 'data/df_reviews_year.parquet'
 ruta_horas_juego = 'data/horas_juego.parquet'
 try:
     df_reviews_year = pd.read_parquet(ruta_reviews_year)
     df_horas_juego = pd.read_parquet(ruta_horas_juego)
 except FileNotFoundError:
     # Si el archivo no se encuentra, maneja la excepción
-    raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos")
+    raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos")'''
+
+parquet_gzip_file_path = 'data/data_export_api_gzip.parquet'
+
+try:
+    # Especificar el porcentaje de datos a cargar
+    sample_percent = 5  # Ajusta según tus necesidades
+
+    # Leer una muestra del archivo Parquet directamente con pyarrow
+    parquet_file = pq.ParquetFile(parquet_gzip_file_path)
+
+    # Obtener la cantidad total de grupos de filas en el archivo
+    total_row_groups = parquet_file.num_row_groups
+
+    # Calcular la cantidad de grupos de filas a incluir en la muestra
+    sample_row_groups = [i for i in range(total_row_groups) if i % (100 // sample_percent) == 0]
+
+    # Leer solo los grupos de filas incluidos en la muestra
+    df_data_muestra = parquet_file.read_row_groups(row_groups=sample_row_groups).to_pandas()
+except FileNotFoundError:
+    # Si el archivo no se encuentra, maneja la excepción
+    raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos comprimido con Gzip")
+
 
 @app.get("/")
 def index():
