@@ -176,6 +176,8 @@ def UsersNotRecommend(anio):
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
 
+
+@app.get("/sentiment_analysis/{anio}")
 def sentiment_analysis(anio):
     try:
         positive = 0
