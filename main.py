@@ -41,7 +41,6 @@ try:
 except FileNotFoundError:
     # Si el archivo no se encuentra, maneja la excepción
     raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos comprimido con Gzip")
-g
 
 @app.get("/")
 def index():
