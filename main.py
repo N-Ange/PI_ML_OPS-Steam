@@ -65,34 +65,40 @@ def PlayTimeGenre(genero:str):
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.get("/UserForGenre{genero}")
-def UserForGenre(genero:str):
-   try:
-    # Filtrar las horas de juego para el género especificado
-    horas =df_data_muestra[df_data_muestra['genres'] == genero][["playtime_forever", "release_year", "user_id"]]
+def UserForGenre(genero: str):
+    try:
+        # Verificar que df_data_muestra tiene la estructura esperada
+        if 'genres' not in df_data_muestra.columns or 'playtime_forever' not in df_data_muestra.columns or 'release_year' not in df_data_muestra.columns or 'user_id' not in df_data_muestra.columns:
+            raise HTTPException(status_code=500, detail="Columnas de datos incorrectas en df_data_muestra")
 
-    # Agrupar por usuario y sumar las horas jugadas
-    player = horas.groupby("user_id")["playtime_forever"].sum()
+        # Filtrar las horas de juego para el género especificado
+        horas = df_data_muestra[df_data_muestra['genres'] == genero][["playtime_forever", "release_year", "user_id"]]
 
-    # Obtener el usuario con más horas jugadas
-    player_max = player.idxmax()
+        # Verificar si la columna 'release_year' está presente en el DataFrame
+        if 'release_year' not in horas.columns:
+            raise HTTPException(status_code=500, detail="La columna 'release_year' no está presente en df_data_muestra")
 
-    # Obtener la acumulación de horas jugadas por año
-    year = horas.groupby(["user_id","release_year"])["playtime_forever"].sum().reset_index()
+        # Agrupar por usuario y sumar las horas jugadas
+        player = horas.groupby("user_id")["playtime_forever"].sum()
 
-    # Filtrar las horas jugadas del usuario con más horas
-    horas_player = horas[horas["user_id"] == player_max]
+        # Obtener el usuario con más horas jugadas
+        player_max = player.idxmax()
 
-    # Crear el diccionario de retorno
-    resultado = {
-        "Usuario con más horas jugadas para " + genero: player_max,
-        "Horas jugadas":[{"Año": int(row["release_year"]), "Horas": int(row["playtime_forever"])} for _, row in year.iterrows()]
-    }
+        # Obtener la acumulación de horas jugadas por año
+        year = horas.groupby(["release_year"])["playtime_forever"].sum().reset_index()
 
-    return resultado
-   except FileNotFoundError:
-        raise HTTPException(status_code=500, detail="Error al cargar los archivos de datos")
-   except Exception as e:
+        # Crear el diccionario de retorno
+        resultado = {
+            "Usuario con más horas jugadas para " + genero: player_max,
+            "Horas jugadas": [{"Año": int(row["release_year"]), "Horas": int(row["playtime_forever"])} for _, row in year.iterrows()]
+        }
+
+        return resultado
+    except HTTPException as e:
+        raise e  # Propagar la excepción de FastAPI
+    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/UsersRecommend/{anio}")
 def UsersRecommend(anio):
