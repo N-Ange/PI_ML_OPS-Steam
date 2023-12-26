@@ -175,3 +175,24 @@ def UsersNotRecommend(anio):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
+
+def sentiment_analysis(anio):
+    try:
+        positive = 0
+        negative = 0
+        neutral = 0
+        filtro = (df_data_muestra["reviews_posted"] == anio)
+        reviews = df_data_muestra[filtro]
+        
+        for i in  reviews["sentiment_analysis"]:
+            if i == 2:
+                positive +=1
+            elif i == 1:
+                neutral +=1
+            elif i == 0:
+                negative +=1
+        resultado = [
+        {"Negativas: ",negative," Positivas: ",positive," Neutrales: ",neutral}]
+        return resultado
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
