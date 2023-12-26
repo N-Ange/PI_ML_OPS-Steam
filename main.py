@@ -114,11 +114,11 @@ def UserForGenre(genero:str):
 
 
 @app.get("/UsersRecommend/{anio}")
-def UsersRecommend(anio):
+def UsersRecommend(anio:int):
     try:
         filtro = (df_data_muestra.query(f"reviews_year == {anio}")  & 
-                  (df_data_muestra[df_data_muestra["reviews_recommend"] == True]) & 
-                  (df_data_muestra[df_data_muestra["sentiment_analysis"] >= 1]))
+                  (df_data_muestra["reviews_recommend"] == True) & 
+                  (df_data_muestra["sentiment_analysis"] >= 1))
         reviews = df_data_muestra[filtro]
 
         games = (reviews.groupby('item_name')['item_name']
@@ -138,16 +138,21 @@ def UsersRecommend(anio):
 @app.get("/UsersNotRecommend/{anio}")
 def UsersNotRecommend(anio):
     try:
-        filtro = (df_data_muestra["reviews_year"] == anio) & (df_data_muestra["reviews_recommend"] == False) & (df_data_muestra["sentiment_analysis"] == 0)
+        filtro = (df_data_muestra.query(f"reviews_year == {anio}")  & 
+                  (df_data_muestra["reviews_recommend"] == True) & 
+                  (df_data_muestra["sentiment_analysis"] == 0))
         reviews = df_data_muestra[filtro]
 
-        games = reviews.groupby("item_id").size().reset_index(name="count")
-        games = games.sort_values(by="count", ascending=False)
-        
-        top_por_anio = {
-            f"Puesto{index +1}":{"item_id":row["item_id"], "item_name":row["item_name"]} for index, row in games.head(3).iterrows()
-        }
+        games = (reviews.groupby('item_name')['item_name']
+                 .count()
+                 .reset_index(name="count")
+                 .sort_values(by="count", ascending=False)
+                 .head(3))
+
+       
+        top_por_anio ={f"Puesto {i+1}":juego for i,juego in enumerate(games["item_name"])}
         
         return top_por_anio
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
