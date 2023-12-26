@@ -12,10 +12,10 @@ warnings.filterwarnings("ignore")
 
 
 app = FastAPI()
-ruta_revieews_year = 'data/df_reviews_year.parquet'
-ruta_horas_juego = 'data/df_reviews_year.parquet'
+ruta_reviews_year = 'data/df_reviews_year.parquet'
+ruta_horas_juego = 'data/horas_juego.parquet'
 try:
-    df_reviews_year = pd.read_parquet(ruta_revieews_year)
+    df_reviews_year = pd.read_parquet(ruta_reviews_year)
     df_horas_juego = pd.read_parquet(ruta_horas_juego)
 except FileNotFoundError:
     # Si el archivo no se encuentra, maneja la excepción
@@ -30,18 +30,18 @@ def index():
 
 @app.get("/PlayTimeGenre/{genero}")
 def PlayTimeGenre(genero:str):
-    
-    
 
-    gener = df_horas_juego[df_horas_juego["genres"].str.lower() ==genero.lower()]
-    if not gener.empty:
-        horas_anio = gener.groupby("release_year")["playtime_forever"].sum().reset_index()
-        max_horas  = horas_anio["playtime_forever"].max()
-        anio = horas_anio.loc[horas_anio["playtime_forever"] == max_horas,"release_year"].iloc[0]
-        
-        return  {
-            anio,"Año de lanzamiento con mas horas jugadas para el Genero: {}".format(genero) 
-            }
+    try:
+        gener = df_horas_juego.query(f"genres=='{genero}'")
+        #gener = df_horas_juego[df_horas_juego["genres"].str.lower() ==genero.lower()]
+        if not gener.empty:
+            horas_anio = gener.groupby("release_year")["playtime_forever"].sum().reset_index()
+            max_horas  = horas_anio["playtime_forever"].max()
+            #anio = horas_anio.loc[horas_anio["playtime_forever"] == max_horas,"release_year"].iloc[0]
+            
+            return  {"Año de lanzamiento con mas horas jugadas para el Genero:" +genero: int(max_horas)                 }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
 @app.get("/UserForGenre{genero}")
 def UserForGenre(genero:str):
