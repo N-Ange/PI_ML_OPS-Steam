@@ -101,10 +101,10 @@ def UsersRecommend(anio):
         filtro = (df_data_muestra["reviews_year"] == anio) & (df_data_muestra["reviews_recommend"] == True) & (df_data_muestra["sentiment_analysis"] >= 1)
         reviews = df_data_muestra[filtro]
 
-        games = reviews.groupby(df_data_muestra["item_id"]).size().reset_index(name="count")
-        games = games.sort_values(by="count", ascending=False)
-        
-        top_por_anio = []
+        games = reviews.groupby('item_name')['item_name'].count().reset_index(name="count").sort_values(by="count", ascending=False).head(3)
+
+        top = {f"Puesto {i+1}":juego for i in enumerate(games["item_name"])}
+        top_por_anio = {}
         for index, row in games.head(3).iterrows():
             anio_info={
                 "Puesto": index + 1,
@@ -126,7 +126,7 @@ def UsersNotRecommend(anio):
         games = reviews.groupby(df_data_muestra["item_id"]).size().reset_index(name="count")
         games = games.sort_values(by="count", ascending=False)
         
-        top_por_anio = []
+        top_por_anio = {}
         for index, row in games.head(3).iterrows():
             anio_info={
                 "Puesto": index + 1,
