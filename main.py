@@ -89,16 +89,37 @@ def UserForGenre(genero:str):
     }
 
     return resultado
+   except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="Error al cargar los archivos de datos")
    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/UsersRecommend/{anio}")
+def UsersRecommend(anio):
+    try:
+        filtro = df_data_muestra.query(f"reviews_year =={anio}")
+        filtro = (df_data_muestra["reviews_year"] == anio) & (df_data_muestra["reviews_recommend"] == True) & (df_data_muestra["sentiment_analysis"] >= 1)
+        reviews = df_data_muestra[filtro]
 
+        games = reviews.groupby(df_data_muestra["item_id"]).size().reset_index(name="count")
+        games = games.sort_values(by="count", ascending=False)
+        
+        top_por_anio = []
+        for index, row in games.head(3).iterrows():
+            anio_info={
+                "Puesto": index + 1,
+                "item_id": row["item_id"],
+            }
+            top_por_anio.append(anio_info)
+        return top_por_anio
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
 
 @app.get("/UsersNotRecommend/{anio}")
 def UsersNotRecommend(anio):
     try:
-    
+        filtro = df_data_muestra.query(f"reviews_year =={anio}")
         filtro = (df_data_muestra["reviews_year"] == anio) & (df_data_muestra["reviews_recommend"] == False) & (df_data_muestra["sentiment_analysis"] == 0)
         reviews = df_data_muestra[filtro]
 
