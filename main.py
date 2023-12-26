@@ -116,7 +116,9 @@ def UserForGenre(genero:str):
 @app.get("/UsersRecommend/{anio}")
 def UsersRecommend(anio):
     try:
-        filtro = (df_data_muestra["reviews_year"] == anio) & (df_data_muestra["reviews_recommend"] == True) & (df_data_muestra["sentiment_analysis"] >= 1)
+        filtro = df_data_muestra.query(f"reviews_year == {anio}")  
+        filtro = df_data_muestra["reviews_recommend"] == True 
+        filtro = df_data_muestra["sentiment_analysis"] >= 1
         reviews = df_data_muestra[filtro]
 
         games = reviews.groupby('item_name')['item_name'].count().reset_index(name="count").sort_values(by="count", ascending=False).head(3)
