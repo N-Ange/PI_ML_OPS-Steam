@@ -141,39 +141,27 @@ def UsersNotRecommend(anio):
     '''
   Devuelve el top 3 de juegos MENOS recomendados por usuarios para el año dado.
 
-  Args:
+   parameters::
     anio (int): Año para el cual se buscan los juegos menos recomendados.
 
   Returns:
     dict: Diccionario con el top 3 de juegos menos recomendados, con la estructura {posición: juego}.
     '''
     try:
-        # Filtrar el DataFrame por el año
-        filtered_df = df_data_muestra.query(f"reviews_anio == {anio}")
+        # Filtrar el DataFrame
+        filtro = df_data_muestra.query(f"reviews_year == {anio}")
+        filtro = filtro[filtro['reviews_recommend'] == False]
+        filtro = filtro[filtro['sentiment_analysis'] == 0]
         
 
-        # Filtrar el DataFrame por reseñas no recomendadas
-        filtered_df = filtered_df[filtered_df['reviews_recommend'] == False]
-        
-
-        # Filtrar el DataFrame por reseñas con sentimiento negativo
-        filtered_df = filtered_df[filtered_df['sentiment_analysis'] == 0]
-        
-
-        # Obtener el top 3 de juegos menos recomendados
-        not_recommend_counts = filtered_df.groupby('item_name')['item_name'].count().reset_index(name="count").sort_values(by="count", ascending=False).head(3)
+        # Obtener los juegos menos recomendados
+        games = filtro.groupby('item_name')['item_name'].count().reset_index(name="count").sort_values(by="count", ascending=False).head(3)
         
 
         # Convertir el DataFrame a una lista
-        top_3_dict = {f"Puesto {i+1}": juego for i, juego in enumerate(not_recommend_counts['item_name'])}
+        list_game = {f"Puesto {i+1}": juego for i, juego in enumerate(games['item_name'])}
         
-        return top_3_dict
+        return list_game
     
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
-
-        
-        return top_por_anio
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    
