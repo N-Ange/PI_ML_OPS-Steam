@@ -180,21 +180,12 @@ def UsersNotRecommend(anio):
 @app.get("/sentiment_analysis/{anio}")
 def sentiment_analysis(anio):
     try:
-        positive = 0
-        negative = 0
-        neutral = 0
-        filtro = (df_data_muestra["reviews_year"] == anio)
-        reviews = df_data_muestra[filtro]
         
-        for i in  reviews["sentiment_analysis"]:
-            if i == 2:
-                positive +=1
-            elif i == 1:
-                neutral +=1
-            elif i == 0:
-                negative +=1
-        resultado = {"Negativas": negative, "Positivas": positive, "Neutrales": neutral}
-        return resultado
-        return resultado
+        filtro = df_data_muestra.query(f"reviews_year == {anio}")
+        reviews = filtro.groupby("sentiment_analysis")["sentiment_analysis"].size()
+        sentiment_mapping = {2: "Positive", 1: "Neutral", 0: "Negative"}
+        sentiment_counts_mapped = {sentiment_mapping[key]: value for key, value in reviews.items()}
+        
+        return sentiment_counts_mapped
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
