@@ -12,8 +12,8 @@ warnings.filterwarnings("ignore")
 
 
 app = FastAPI()
-ruta_revieews_year = ("\data\df_reviews_year.parquet")
-ruta_horas_juego = ("\data\df_reviews_year.parquet")
+ruta_revieews_year = 'data/df_reviews_year.parquet'
+ruta_horas_juego = 'data/df_reviews_year.parquet'
 try:
     df_reviews_year = pd.read_parquet(ruta_revieews_year)
     df_horas_juego = pd.read_parquet(ruta_horas_juego)
@@ -97,4 +97,3 @@ def UsersNotRecommend2(anio):
     games = reviews.groupby(df_reviews_year["title"]).size().reset_index(name="count")
     games = games.sort_values(by = "count",ascending = False)
     return games.head(3)
-   
