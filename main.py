@@ -15,8 +15,8 @@ app = FastAPI()
 ruta_revieews_year = ("\data\df_reviews_year.parquet")
 ruta_horas_juego = ("\data\df_reviews_year.parquet")
 try:
-    df_reviews_year = pd.read_parquet
-    df_horas_juego = pd.read_parquet
+    df_reviews_year = pd.read_parquet(ruta_revieews_year)
+    df_horas_juego = pd.read_parquet(ruta_horas_juego)
 except FileNotFoundError:
     # Si el archivo no se encuentra, maneja la excepción
     raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos")
