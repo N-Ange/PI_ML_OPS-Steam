@@ -77,7 +77,7 @@ def UserForGenre(genero:str):
     player_max = player.idxmax()
 
     # Obtener la acumulación de horas jugadas por año
-    year = horas.groupby("release_year")["playtime_forever"].sum().reset_index()
+    year = horas.groupby("user_id","release_year")["playtime_forever"].sum().reset_index()
 
     # Filtrar las horas jugadas del usuario con más horas
     horas_player = horas[horas["user_id"] == player_max]
@@ -99,7 +99,7 @@ def UserForGenre(genero:str):
 def UsersNotRecommend(anio):
     try:
     
-        filtro = (df_data_muestra["reviews_posted"] == anio) & (df_data_muestra["reviews_recommend"] == False) & (df_data_muestra["sentiment_analysis"] == 0)
+        filtro = (df_data_muestra["reviews_year"] == anio) & (df_data_muestra["reviews_recommend"] == False) & (df_data_muestra["sentiment_analysis"] == 0)
         reviews = df_data_muestra[filtro]
 
         games = reviews.groupby(df_data_muestra["item_id"]).size().reset_index(name="count")
@@ -115,13 +115,3 @@ def UsersNotRecommend(anio):
         return top_por_anio
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/UsersNotRecommend2/{anio}")
-def UsersNotRecommend2(anio):
-   
-    filtro = (df_data_muestra["reviews_posted"] == anio) & (df_data_muestra["reviews_recommend"] == False) & (df_data_muestra["sentiment_analysis"] == 0  )
-    reviews = df_data_muestra[filtro] 
-
-    games = reviews.groupby(df_data_muestra["title"]).size().reset_index(name="count")
-    games = games.sort_values(by = "count",ascending = False)
-    return games.head(3)
