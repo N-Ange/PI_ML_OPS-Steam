@@ -183,7 +183,7 @@ def sentiment_analysis(anio):
         positive = 0
         negative = 0
         neutral = 0
-        filtro = (df_data_muestra["reviews_posted"] == anio)
+        filtro = (df_data_muestra["reviews_posted == {anio}"])
         reviews = df_data_muestra[filtro]
         
         for i in  reviews["sentiment_analysis"]:
