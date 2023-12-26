@@ -115,37 +115,47 @@ def UserForGenre(genero:str):
 
 @app.get("/UsersRecommend/{anio}")
 def UsersRecommend(anio:int):
-    try:
-        filtro = (df_data_muestra.query(f"reviews_year == {anio}")  & 
-                  (df_data_muestra["reviews_recommend"] == True) & 
-                  (df_data_muestra["sentiment_analysis"] >= 1))
-        reviews = df_data_muestra[filtro]
-
-        games = (reviews.groupby('item_name')['item_name']
-                 .count()
-                 .reset_index(name="count")
-                 .sort_values(by="count", ascending=False)
-                 .head(3))
-
-       
-        top_por_anio ={f"Puesto {i+1}":juego for i,juego in enumerate(games["item_name"])}
         
-        return top_por_anio
+    '''
+  Devuelve los 3 de juegos MAs recomendados por usuarios para el año dado.
+
+   parameters::
+    anio (int): Año para el cual se buscan los juegos menos recomendados.
+
+  Returns:
+    dict: Diccionario con los 3 juegos mas recomendados.
+    '''
+    try:
+        # Filtrar el DataFrame
+        filtro = df_data_muestra.query(f"reviews_year == {anio}")
+        filtro = filtro[filtro['reviews_recommend'] == False]
+        filtro = filtro[filtro['sentiment_analysis'] >= 1]
+        
+
+        # Obtener los juegos menos recomendados
+        games = filtro.groupby('item_name')['item_name'].count().reset_index(name="count").sort_values(by="count", ascending=True).head(3)
+        
+
+        # Convertir el DataFrame a una lista
+        list_game = {f"Puesto {i+1}": juego for i, juego in enumerate(games['item_name'])}
+        
+        return list_game
+    
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
     
 
 @app.get("/UsersNotRecommend/{anio}")
 def UsersNotRecommend(anio):
     
     '''
-  Devuelve el top 3 de juegos MENOS recomendados por usuarios para el año dado.
+  Devuelve los 3 de juegos MENOS recomendados por usuarios para el año dado.
 
    parameters::
     anio (int): Año para el cual se buscan los juegos menos recomendados.
 
   Returns:
-    dict: Diccionario con el top 3 de juegos menos recomendados, con la estructura {posición: juego}.
+    dict: Diccionario con el top 3 de juegos menos recomendados.
     '''
     try:
         # Filtrar el DataFrame
