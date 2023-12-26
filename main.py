@@ -41,7 +41,7 @@ try:
 except FileNotFoundError:
     # Si el archivo no se encuentra, maneja la excepción
     raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos comprimido con Gzip")
-
+g
 
 @app.get("/")
 def index():
@@ -54,7 +54,7 @@ def index():
 def PlayTimeGenre(genero:str):
 
     try:
-        gener = df_horas_juego.query(f"genres=='{genero}'")
+        gener = df_data_muestra.query(f"genres=='{genero}'")
         #gener = df_horas_juego[df_horas_juego["genres"].str.lower() ==genero.lower()]
         if not gener.empty:
             horas_anio = gener.groupby("release_year")["playtime_forever"].sum().reset_index()
@@ -69,7 +69,7 @@ def PlayTimeGenre(genero:str):
 def UserForGenre(genero:str):
   
     # Filtrar las horas de juego para el género especificado
-    horas = df_horas_juego[df_horas_juego['genres'] == genero][["playtime_forever", "release_year", "user_id"]]
+    horas =df_data_muestra[df_horas_juego['genres'] == genero][["playtime_forever", "release_year", "user_id"]]
 
     # Agrupar por usuario y sumar las horas jugadas
     player = horas.groupby("user_id")["playtime_forever"].sum()
@@ -97,10 +97,10 @@ def UserForGenre(genero:str):
 @app.get("/UsersNotRecommend/{anio}")
 def UsersNotRecommend(anio):
     
-    filtro = (df_reviews_year["reviews_posted"] == anio) & (df_reviews_year["reviews_recommend"] == False) & (df_reviews_year["sentiment_analysis"] == 0)
-    reviews = df_reviews_year[filtro]
+    filtro = (df_data_muestra["reviews_posted"] == anio) & (df_reviews_year["reviews_recommend"] == False) & (df_data_muestra["sentiment_analysis"] == 0)
+    reviews = df_data_muestra[filtro]
 
-    games = reviews.groupby(df_reviews_year["item_id"]).size().reset_index(name="count")
+    games = reviews.groupby(df_data_muestra["item_id"]).size().reset_index(name="count")
     games = games.sort_values(by="count", ascending=False)
       
     top_por_anio = {} 
@@ -113,9 +113,9 @@ def UsersNotRecommend(anio):
 @app.get("/UsersNotRecommend2/{anio}")
 def UsersNotRecommend2(anio):
    
-    filtro = (df_reviews_year["reviews_posted"] == anio) & (df_reviews_year["reviews_recommend"] == False) & (df_reviews_year["sentiment_analysis"] == 0  )
-    reviews = df_reviews_year[filtro] 
+    filtro = (df_data_muestra["reviews_posted"] == anio) & (df_data_muestra["reviews_recommend"] == False) & (df_data_muestra["sentiment_analysis"] == 0  )
+    reviews = df_data_muestra[filtro] 
 
-    games = reviews.groupby(df_reviews_year["title"]).size().reset_index(name="count")
+    games = reviews.groupby(df_data_muestra["title"]).size().reset_index(name="count")
     games = games.sort_values(by = "count",ascending = False)
     return games.head(3)
