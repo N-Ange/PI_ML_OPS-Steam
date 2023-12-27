@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Path, HTTPException
 from fastapi.responses import HTMLResponse
+import presentacion as pref
 import asyncio
 import pandas as pd
 import pyarrow as pa
@@ -39,12 +40,6 @@ try:
 except FileNotFoundError:
     # Si el archivo no se encuentra, maneja la excepción
     raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos comprimido con Gzip")
-
-@app.get("/")
-def index():
-    return "hola"
-
-
 
 
 @app.get("/PlayTimeGenre")
@@ -152,7 +147,7 @@ def UsersRecommend(anio: int = 2012):
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
     
 
-@app.get("/UsersNotRecommend}")
+@app.get("/UsersNotRecommend")
 def UsersNotRecommend(anio: int = 2015):
     
     '''
@@ -223,3 +218,40 @@ def game(game : str  = "Half-Life: Opposing Force"):
             
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
+
+
+
+@app.get(path="/", response_class=HTMLResponse, tags=["Home"])
+def home():
+    return '''
+        <html>
+            <head>
+                <title>Primer proycto Integrador</title>
+            </head>
+            <style>
+            body {
+                    font-family: Arial, sans-serif;
+                    padding: 20px;
+                }
+                h1 {
+                    color: #333;
+                    text-align: center;
+                }
+                p {
+                    color: #666;
+                    text-align: center;
+                    font-size: 18px;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        </body>
+            <h1> Api para consultas de la plataforma de Steam</h1>
+            <p>Esta Api es parate del primer proyecto integrador de la carrara de Data Science de Henry.</p>
+            <p> Para acceder al proyecto aca click <a href="http://127.0.0.1:8000/docs" title="Aqui"> Aqui</a>
+            <p> El repositorio del proyecto esta en <a href = "https://github.com/N-Ange/PI_ML_OPS-Steam" title = "GitHub"> GitHub</a>
+
+            
+            </body>
+        </html>
+    '''
