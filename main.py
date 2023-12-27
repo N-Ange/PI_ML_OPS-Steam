@@ -14,8 +14,8 @@ warnings.filterwarnings("ignore")
 app = FastAPI()
 
 
-parquet_gzip_file_path = 'data_export_api_gzip.parquet'
-parquet_gzip_file_path_item = 'data\df_item_sim_gzip.parquet'
+parquet_gzip_file_path = 'data/data_export_api_gzip.parquet'
+parquet_gzip_file_path_item = 'data/df_item_sim_gzip.parquet'
 
 try:
     # Especificar el porcentaje de datos a cargar
