@@ -247,7 +247,7 @@ def home():
         </body>
             <h1> Api para consultas de la plataforma de Steam</h1>
             <p>Esta Api es parate del primer proyecto integrador de la carrara de Data Science de Henry.</p>
-            <p> Para acceder al proyecto aca click <a href="http://127.0.0.1:8000/docs" title="Aqui"> Aqui</a>
+            <p> Para acceder al proyecto aca click <a href="https://pi-ml-ops-steam-z21p.onrender.com/docs" title="Aqui"> Aqui</a>
             <p> El repositorio del proyecto esta en <a href = "https://github.com/N-Ange/PI_ML_OPS-Steam" title = "GitHub"> GitHub</a>
 
             
