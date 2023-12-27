@@ -47,8 +47,8 @@ def index():
 
 
 
-@app.get("/PlayTimeGenre/{genero}")
-def PlayTimeGenre(genero:str = "Racing"):
+@app.get("/PlayTimeGenre")
+def PlayTimeGenre(genero: str = "Racing"):
     '''
        Esta funcion devuelve el año con mas horas jugadas para el genero, segun su fecha de lanzamiento
        parameters: 
@@ -71,8 +71,8 @@ def PlayTimeGenre(genero:str = "Racing"):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@app.get("/UserForGenre{genero}")
-def UserForGenre(genero:str = "Action"):
+@app.get("/UserForGenre")
+def UserForGenre(genero: str = "Action"):
     '''
     Esta funcion recibe un genero y devuelva un diccionario con el usuario que jugo mas horas esa genero y cuanto jugo cada año.
 
@@ -120,8 +120,8 @@ def UserForGenre(genero:str = "Action"):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.get("/UsersRecommend/{anio}")
-def UsersRecommend(anio:int = 2012):
+@app.get("/UsersRecommend")
+def UsersRecommend(anio: int = 2012):
         
     '''
   Devuelve los 3 de juegos MAs recomendados por usuarios para el año dado.
@@ -152,7 +152,7 @@ def UsersRecommend(anio:int = 2012):
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
     
 
-@app.get("/UsersNotRecommend/{año}")
+@app.get("/UsersNotRecommend}")
 def UsersNotRecommend(anio: int = 2015):
     
     '''
@@ -184,7 +184,7 @@ def UsersNotRecommend(anio: int = 2015):
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
 
 
-@app.get("/sentiment_analysis/{año}")
+@app.get("/sentiment_analysis")
 def sentiment_analysis(anio: int = 2014):
     try:
         
