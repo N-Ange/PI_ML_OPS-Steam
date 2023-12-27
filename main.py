@@ -12,16 +12,10 @@ warnings.filterwarnings("ignore")
 
 
 app = FastAPI()
-'''ruta_reviews_year = 'data/df_reviews_year.parquet'
-ruta_horas_juego = 'data/horas_juego.parquet'
-try:
-    df_reviews_year = pd.read_parquet(ruta_reviews_year)
-    df_horas_juego = pd.read_parquet(ruta_horas_juego)
-except FileNotFoundError:
-    # Si el archivo no se encuentra, maneja la excepción
-    raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos")'''
+
 
 parquet_gzip_file_path = 'data/data_export_api_gzip.parquet'
+df_item_sim = pd.read_parquet("data\df_item_sim.parquet")
 
 try:
     # Especificar el porcentaje de datos a cargar
@@ -51,6 +45,15 @@ def index():
 
 @app.get("/PlayTimeGenre/{genero}")
 def PlayTimeGenre(genero:str):
+    '''
+       Esta funcion devuelve el año con mas horas jugadas para el genero, segun su fecha de lanzamiento
+       parameters: 
+            genero (str): Genero del cual se desea saber cual fue el año que mas tiempo jugo.
+        
+
+        Returns:
+            Dict: Año que mas horas se juego dicho genero.
+        '''
 
     try:
         gener = df_data_muestra.query(f"genres=='{genero}'")
@@ -67,42 +70,42 @@ def PlayTimeGenre(genero:str):
 @app.get("/UserForGenre{genero}")
 def UserForGenre(genero:str):
     '''
-    Datos:
-    - genero (str): Género para el cual se busca el usuario con más horas jugadas y la acumulación de horas por año.
+    Esta funcion rcibe un genero y devuelva un diccionario con el usuario que jugo mas horas esa genero y cuanto jugo cada año.
 
-    Funcionalidad:
-    - Devuelve el usuario con más horas jugadas y una lista de la acumulación de horas jugadas por año para el género especificado.
+    parameters:
+        genero (str): Género para el cual se busca el usuario con más horas jugadas y la acumulación de horas por año.
 
-    Return:
-    - Dict: {"Usuario con más horas jugadas para Género X": List, "Horas jugadas": List}
+    
+    Returns:
+        Dicc: {"Usuario con más horas jugadas para Género X": List, "Horas jugadas": List}
     '''
 
     try:
         # Cargar solo las columnas necesarias para esta función
-        juegos_genero = df_data_muestra[['genres', 'release_year', 'playtime_forever', 'user_id']].copy()
+        juegos_genero = df_data_muestra[["genres", "release_year", "playtime_forever", "user_id"]].copy()
 
-        condition = juegos_genero['genres'].apply(lambda x: genero in x)
+        condition = juegos_genero["genres"].apply(lambda x: genero in x)
         juegos_genero = juegos_genero[condition]
 
-        juegos_genero['playtime_forever'] = juegos_genero['playtime_forever'] / 60
-        juegos_genero['release_year'] = pd.to_numeric(juegos_genero['release_year'], errors='coerce')
-        juegos_genero = juegos_genero[juegos_genero['release_year'] >= 100]
-        juegos_genero['Año'] = juegos_genero['release_year']
+        juegos_genero["playtime_forever"] = juegos_genero["playtime_forever"] / 60
+        juegos_genero["release_year"] = pd.to_numeric(juegos_genero["release_year"], errors="coerce")
+        juegos_genero = juegos_genero[juegos_genero["release_year"] >= 100]
+        juegos_genero["Año"] = juegos_genero["release_year"]
 
-        horas_por_usuario = juegos_genero.groupby(['user_id', 'Año'])['playtime_forever'].sum().reset_index()
+        horas_por_usuario = juegos_genero.groupby(["user_id", "Año"])["playtime_forever"].sum().reset_index()
 
         if not horas_por_usuario.empty:
-            usuario_max_horas = horas_por_usuario.groupby('user_id')['playtime_forever'].sum().idxmax()
-            usuario_max_horas = horas_por_usuario[horas_por_usuario['user_id'] == usuario_max_horas]
+            usuario_max_horas = horas_por_usuario.groupby("user_id")["playtime_forever"].sum().idxmax()
+            usuario_max_horas = horas_por_usuario[horas_por_usuario["user_id"] == usuario_max_horas]
         else:
             usuario_max_horas = None
 
-        acumulacion_horas = horas_por_usuario.groupby(['Año'])['playtime_forever'].sum().reset_index()
-        acumulacion_horas = acumulacion_horas.rename(columns={'Año': 'Año', 'playtime_forever': 'Horas'})
+        acumulacion_horas = horas_por_usuario.groupby(["Año"])["playtime_forever"].sum().reset_index()
+        acumulacion_horas = acumulacion_horas.rename(columns={"Año": "Año", "playtime_forever": "Horas"})
 
         resultado = {
-            "Usuario con más horas jugadas para " + genero: {"user_id": usuario_max_horas.iloc[0]['user_id'], "Año": int(usuario_max_horas.iloc[0]['Año']), "playtime_forever": usuario_max_horas.iloc[0]['playtime_forever']},
-            "Horas jugadas": [{"Año": int(row['Año']), "Horas": row['Horas']} for _, row in acumulacion_horas.iterrows()]
+            "Usuario con más horas jugadas para " + genero: {"user_id": usuario_max_horas.iloc[0]["user_id"], "Año": int(usuario_max_horas.iloc[0]["Año"]), "playtime_forever": usuario_max_horas.iloc[0]["playtime_forever"]},
+            "Horas jugadas": [{"Año": int(row["Año"]), "Horas": row["Horas"]} for _, row in acumulacion_horas.iterrows()]
         }
 
         return resultado
@@ -187,5 +190,32 @@ def sentiment_analysis(anio):
         sentiment_counts_mapped = {sentiment_mapping[key]: value for key, value in reviews.items()}
         
         return sentiment_counts_mapped
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
+
+
+@app.get("/recomendacion de juego")
+def game(game):
+    '''
+    Muestra la lista de juegos similares
+
+    parameters:
+        game(str) El nombre del juego que se desea buscar similares
+
+    return
+        list: Lista de 5 jeugos similares
+    
+    '''
+    try:
+        count = 1
+        resultado=[]
+        for item in df_item_sim.sort_values(by = game, ascending = False).index[1:6]:
+            print(f"Nuumero{count}: {item}")
+            resultado.append(f"Número {count}: {item}")
+            count+=1
+
+        return resultado
+        
+            
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
