@@ -14,8 +14,8 @@ warnings.filterwarnings("ignore")
 app = FastAPI()
 
 
-parquet_gzip_file_path = 'data/data_export_api_gzip.parquet'
-parquet_gzip_file_path_item = 'data/df_item_sim_gzip.parquet'
+parquet_gzip_file_path = 'PI_ML_OPS-Steam\data\data_export_api_gzip.parquet'
+parquet_gzip_file_path_item = 'PI_ML_OPS-Steam\data\df_item_sim_gzip.parquet'
 
 try:
     # Especificar el porcentaje de datos a cargar
@@ -48,7 +48,7 @@ def index():
 
 
 @app.get("/PlayTimeGenre/{genero}")
-def PlayTimeGenre(genero:str):
+def PlayTimeGenre(genero:str = "Racing"):
     '''
        Esta funcion devuelve el año con mas horas jugadas para el genero, segun su fecha de lanzamiento
        parameters: 
@@ -72,9 +72,9 @@ def PlayTimeGenre(genero:str):
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.get("/UserForGenre{genero}")
-def UserForGenre(genero:str):
+def UserForGenre(genero:str = "Action"):
     '''
-    Esta funcion rcibe un genero y devuelva un diccionario con el usuario que jugo mas horas esa genero y cuanto jugo cada año.
+    Esta funcion recibe un genero y devuelva un diccionario con el usuario que jugo mas horas esa genero y cuanto jugo cada año.
 
     parameters:
         genero (str): Género para el cual se busca el usuario con más horas jugadas y la acumulación de horas por año.
@@ -121,7 +121,7 @@ def UserForGenre(genero:str):
 
 
 @app.get("/UsersRecommend/{anio}")
-def UsersRecommend(anio:int):
+def UsersRecommend(anio:int = 2012):
         
     '''
   Devuelve los 3 de juegos MAs recomendados por usuarios para el año dado.
@@ -152,8 +152,8 @@ def UsersRecommend(anio:int):
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
     
 
-@app.get("/UsersNotRecommend/{anio}")
-def UsersNotRecommend(anio):
+@app.get("/UsersNotRecommend/{año}")
+def UsersNotRecommend(anio: int = 2015):
     
     '''
   Devuelve los 3 de juegos MENOS recomendados por usuarios para el año dado.
@@ -184,8 +184,8 @@ def UsersNotRecommend(anio):
         raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
 
 
-@app.get("/sentiment_analysis/{anio}")
-def sentiment_analysis(anio):
+@app.get("/sentiment_analysis/{año}")
+def sentiment_analysis(anio: int = 2014):
     try:
         
         filtro = df_data_muestra.query(f"reviews_year == {anio}")
@@ -199,7 +199,7 @@ def sentiment_analysis(anio):
 
 
 @app.get("/recomendacion de juego")
-def game(game):
+def game(game : str  = "Half-Life: Opposing Force"):
     '''
     Muestra la lista de juegos similares
 
@@ -207,7 +207,7 @@ def game(game):
         game(str) El nombre del juego que se desea buscar similares
 
     return
-        list: Lista de 5 jeugos similares
+        list: Lista de 5 juegos similares
     
     '''
     try:
