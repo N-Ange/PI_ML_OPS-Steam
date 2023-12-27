@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Path, HTTPException
 from fastapi.responses import HTMLResponse
-import presentacion as pref
 import asyncio
 import pandas as pd
 import pyarrow as pa
