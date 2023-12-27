@@ -15,7 +15,7 @@ app = FastAPI()
 
 
 parquet_gzip_file_path = 'data/data_export_api_gzip.parquet'
-df_item_sim = pd.read_parquet("data\df_item_sim.parquet")
+parquet_gzip_file_path_item = 'data\df_item_sim_gzip.parquet'
 
 try:
     # Especificar el porcentaje de datos a cargar
@@ -23,15 +23,19 @@ try:
 
     # Leer una muestra del archivo Parquet directamente con pyarrow
     parquet_file = pq.ParquetFile(parquet_gzip_file_path)
+    item_file = pq.ParquetFile(parquet_gzip_file_path_item)
 
     # Obtener la cantidad total de grupos de filas en el archivo
     total_row_groups = parquet_file.num_row_groups
+    total_item_row = item_file.num_row_groups
 
     # Calcular la cantidad de grupos de filas a incluir en la muestra
     sample_row_groups = [i for i in range(total_row_groups) if i % (100 // sample_percent) == 0]
+    sample_item = [[i for i in range(total_item_row) if i % (100 // sample_percent) == 0]]
 
     # Leer solo los grupos de filas incluidos en la muestra
     df_data_muestra = parquet_file.read_row_groups(row_groups=sample_row_groups).to_pandas()
+    df_item_sim = item_file.read_row_groups(item_row = sample_item).to_pandas()
 except FileNotFoundError:
     # Si el archivo no se encuentra, maneja la excepción
     raise HTTPException(status_code=500, detail="Error al cargar el archivo de datos comprimido con Gzip")
