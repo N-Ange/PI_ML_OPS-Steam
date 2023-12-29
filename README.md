@@ -16,7 +16,11 @@ Se va a dessarrolar la Extraccion, Transformacion y carga (ETL) y el Analisis Ex
  Se realizo el proceso de ETL de los 3 datasets.
  Dos de los dataset estaban anidados, es decir habia columnas con diccionarios o listas de diccionarios, por lo que se hizo un proceso de desanidad para transformar esos datos en columnas.
  Luego se borraron varias columnas y datos que no aportaban informacion util para el proyecto, ya que habia una limitacion por el rendimiento de la API.
- [01_ELT australian_user_reviews](PI_ML_OPS-Steam/01_ETL australian_user_reviews.ipynb)
+ [01_ELT australian_user_reviews](https://github.com/N-Ange/PI_ML_OPS-Steam/blob/main/01_ETL%20australian_user_reviews.ipynb)
+ [01_ETL australian_users_items](https://github.com/N-Ange/PI_ML_OPS-Steam/blob/main/01_ETL%20australian_users_items.ipynb)
+ [01_ETL output_steam_games](https://github.com/N-Ange/PI_ML_OPS-Steam/blob/main/01_ETL%20output_steam_games.ipynb)
+ [EDA]https://github.com/N-Ange/PI_ML_OPS-Steam/blob/main/EDA.ipynb
+
 
 
 # Analisis de sentimientos
@@ -29,8 +33,12 @@ Uno de los pedidos del proyecto es un analisis de sentimientos, para lo cual se 
 
 Ya que solo se buscaba un MVP se realizo un analisis de sentimiento basico utilizando la libreria TextBlob que es libreria de procesamiento natural de lenguaje (NLP). El metodo que utilizado es asignar un valor numerico a un texto, por ejemplo los comentarios de los usuarios, para asi representar el sentimiento expresado en el texto.
 
+[Enginer](https://github.com/N-Ange/PI_ML_OPS-Steam/blob/main/enginer.ipynb)
+
 ## Analisis exoloratorio de datos
 Se realizo un EDA de los 3 datasets ya sometidos a ETL con la finalidad de identificar las variables que se pueden llegar a utilizar en la creacion del modelo de recomendacion. Se utilizo la libreria Pandas para el manejo de datos y las librerias Matplotlib y seaborn para la visualizacion.
+
+[EDA](https://github.com/N-Ange/PI_ML_OPS-Steam/blob/main/EDA.ipynb)
 
 Al finalizar se decidio construir un dataframe especifico con la informacion nesesaria, id del usuario, nombres de los juegos, y el raiting que se creo con la combinacion dell analisis de sentimiento y la recomendacion.
 
@@ -41,7 +49,7 @@ Se crearon dos modelos de recomendacion, uno recibe el nombre de un juego y otro
 El primero tiene una relacion item - item, se toma un juego y basandose en la similitud con otros juegos devuelve los recomendados. El segundo es una relacion usuario-itemm es decir recibe un usuario, y encuentra usuarios similares y recomiedan jugos que a esos usuarios les gustaron.
 
 Para generar estos modelos se uso la similitud de coseno que es una medida que se utiliza comunmente para evaluar la similitd entre dos vectores en un espacio multidimensional.
-
+[Modelo de Recomendacion](https://github.com/N-Ange/PI_ML_OPS-Steam/blob/main/Modelo%20de%20recomendacion.ipynb)
 
 # Desarrolo de Api
 Para la Api se uso la libreria FastApi y se generaron las sigueintes funciones.
@@ -52,9 +60,10 @@ Para la Api se uso la libreria FastApi y se generaron las sigueintes funciones.
 * UserNotRecommend: Recibe un año y devuelve los 3 juegos menos recomendados para dicho año.
 * sentiment_analysis:Recibe un año y devuelve una lsita con la cantidad y tipo de comnetarios se hicieron ese año.
 * recomendacion de juego: Recibe el nombre de un jeugo y devuelve una lista con 5 juegos similares.
-
+[API](https://github.com/N-Ange/PI_ML_OPS-Steam/blob/main/main.py)
 # Deploy
-Para el deply de la API se eligio la plataforma Render la cual nos permite crear y ejecutar aplicaciones, sitios web, permitiendo el despliegue autoatico desde GitHub.
+Para el deploy de la API se eligio la plataforma Render la cual nos permite crear y ejecutar aplicaciones, sitios web, permitiendo el despliegue autoatico desde GitHub.
+[Render](https://pi-ml-ops-steam-z21p.onrender.com/)
 
 Segenero un servicio nuevo en render, se conecto el repositorio para luego iniciar el servicio.
 
