@@ -16,6 +16,8 @@ Se va a dessarrolar la Extraccion, Transformacion y carga (ETL) y el Analisis Ex
  Se realizo el proceso de ETL de los 3 datasets.
  Dos de los dataset estaban anidados, es decir habia columnas con diccionarios o listas de diccionarios, por lo que se hizo un proceso de desanidad para transformar esos datos en columnas.
  Luego se borraron varias columnas y datos que no aportaban informacion util para el proyecto, ya que habia una limitacion por el rendimiento de la API.
+ [01_ELT australian_user_reviews](PI_ML_OPS-Steam/01_ETL australian_user_reviews.ipynb)
+
 
 # Analisis de sentimientos
 
