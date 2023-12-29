@@ -81,3 +81,7 @@ Para este proyecto se presento un MVP se realizaron analisis basicos que se podr
 * ETL: Se puede hacer una transformaciones mas exhaustivas, como por ejemplo al faltar algunos datos se los elimina sin intentar averiguar por que no estaban ni donde se podian obtener.
 
 * Otro servico de Nube: Se puede intentar usar otro servicio para cargar la API, ya que la version gratuita de render limita la memoria que se puede utilizar, por ejemplo se dejo afuera la segunda funcion de recomendacion ya que al utilizar sobre pasaba dicho limite.
+
+###Enlaces utiles:
+Link al video de demostracion: [Youtube](https://youtu.be/YwY3erpFRec)
+Link a mi perfil de [Linkedin](https://www.linkedin.com/in/nadirangelini/)

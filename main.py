@@ -143,7 +143,7 @@ def UsersRecommend(anio: int = 2012):
         return list_game
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
+        raise HTTPException(status_code=500, detail="Error al obtener los juegos mas recomendados.")
     
 
 @app.get("/UsersNotRecommend")
@@ -180,6 +180,15 @@ def UsersNotRecommend(anio: int = 2015):
 
 @app.get("/sentiment_analysis")
 def sentiment_analysis(anio: int = 2012):
+    '''
+    Muestra la cantidad de votos negativos, neutrales y positivos que hubo durante ese año.
+
+    parameter:
+    anio:  int año que se desea saber los votos que hubo.
+
+    return: dicc devuelve un diccionario con la cantidad de votos negativos, positivos y neutrales.
+    
+    '''
     try:
         
         filtro = df_data_muestra.query(f"reviews_year == {anio}")
@@ -189,7 +198,7 @@ def sentiment_analysis(anio: int = 2012):
         
         return sentiment_counts_mapped
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
+        raise HTTPException(status_code=500, detail="Error al obtener los datos.")
 
 
 @app.get("/recomendacion de juego")
@@ -216,7 +225,7 @@ def game(game : str  = "Half-Life: Opposing Force"):
         
             
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Error al obtener los juegos menos recomendados.")
+        raise HTTPException(status_code=500, detail="Error al obtener los juegos recomendados.")
 
 
 
@@ -250,7 +259,7 @@ def home():
             <p> Para acceder al proyecto aca click <a href="https://pi-ml-ops-steam-z21p.onrender.com/docs" title="Aqui"> Aqui</a>
             <p> El repositorio del proyecto esta en <a href = "https://github.com/N-Ange/PI_ML_OPS-Steam" title = "GitHub"> GitHub</a>
             <p> El link de mi perfil de : <a href = "https://www.linkedin.com/in/nadirangelini/" title = "linkedin"> Linkedin</a>
-            <p> Link del video donde se muestra el funcionamiento de la API en <a href = " " title = "Youtube"> Youtube </a> 
+            <p> Link del video donde se muestra el funcionamiento de la API en <a href = "https://youtu.be/YwY3erpFRec" title = "Youtube"> Youtube </a> 
             
             </body>
         </html>
