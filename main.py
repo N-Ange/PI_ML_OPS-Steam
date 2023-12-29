@@ -179,7 +179,7 @@ def UsersNotRecommend(anio: int = 2015):
 
 
 @app.get("/sentiment_analysis")
-def sentiment_analysis(anio: int = 2014):
+def sentiment_analysis(anio: int = 2012):
     try:
         
         filtro = df_data_muestra.query(f"reviews_year == {anio}")
